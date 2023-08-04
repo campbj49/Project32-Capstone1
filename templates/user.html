@@ -1,0 +1,15 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<p>Full Name: {{user.first_name}} {{user.last_name}}</p>
+<h2>Feedback</h2>
+{%for post in feedback%}
+<div>
+    <h3>{{post.title}}</h3>
+    <p>{{post.content}}</p>
+    <a href="/feedback/{{post.id}}/update">Update</a>  
+    <a href="/feedback/{{post.id}}/delete">Delete</a>
+</div>
+{%endfor%}
+<a href="/users/{{user.username}}/feedback/add">Add Feedback</a>
+{% endblock%}
