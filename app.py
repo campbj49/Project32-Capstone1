@@ -6,7 +6,7 @@ from forms import *
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "chickenz"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:@localhost:5432/hashing'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://mxtfbxxk:qrS4yMqEpnmPF0vyS_i-d3QxudEBfCOo@mahmud.db.elephantsql.com/mxtfbxxk'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 
