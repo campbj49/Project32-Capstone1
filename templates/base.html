@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" href="/static/style.css">
+    <!--Example code for displaying flash messages from palletsprojects.com-->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class=flashes>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <!--Tweaked base HTML from lesson-->
+    <head>
+    <title>{{title}}</title>
+    {% if 'username' in session %}
+    <li><a href="/logout">Logout</a></li>
+    <li><a href="/user/{{session['username']}}">Secret</a></li>
+    {%else%}
+    <li><a href="/login">Login</a></li>
+    {% endif %}
+    </head>
+    <body>
+    <h1>{{header}}</h1>
+    {% block content %} Body Content{% endblock%}
+    <script src="https://unpkg.com/jquery"></script>
+    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    
+    <script src="static/script.js"></script>
+    </body>
+</html>
