@@ -16,7 +16,7 @@
     <title>{{title}}</title>
     {% if 'username' in session %}
     <li><a href="/logout">Logout</a></li>
-    <li><a href="/user/{{session['username']}}">Secret</a></li>
+    <li><a href="/user/{{session['username']}}">Character List</a></li>
     {%else%}
     <li><a href="/login">Login</a></li>
     {% endif %}

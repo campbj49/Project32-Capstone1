@@ -48,18 +48,51 @@ class User(db.Model):
         
         else: return False
         
-class Feedback(db.Model):
-    """Feedback model"""
+class Character(db.Model):
+    """Character model"""
 
-    __tablename__ = "feedback"
+    __tablename__ = "characters"
 
     id = db.Column(db.Integer,
                    primary_key=True,
                    autoincrement=True)
-    title = db.Column(db.String(100),
-                   nullable = False)
-    content = db.Column(db.String, nullable= False)
     username = db.Column(db.String(20),
                         db.ForeignKey('users.username'))
+    name = db.Column(db.String(100),
+                   nullable = False)
+    bio = db.Column(db.String, nullable= False)
+
+    str_score = db.Column(db.Integer, nullable = False)
     
-    user = db.relationship("User", backref="feedback")
+    user = db.relationship("User", backref="character")
+
+class Item(db.Model):
+    """Item model"""
+
+    __tablename__ = "items"
+
+    id = db.Column(db.Integer,
+                   primary_key=True,
+                   autoincrement=True)
+    name = db.Column(db.String(100),
+                   nullable = False)
+    desc = db.Column(db.String, nullable= False)
+
+    weight = db.Column(db.Integer, nullable = False)
+
+    inventories = db.relationship("Character",
+                                  secondary = "characters_items",
+                                  backref = "items")
+    
+class CharacterItem(db.Model):
+    """Inventory item model"""
+
+    __tablename__ = "characters_items"
+
+    id = db.Column(db.Integer,
+                   primary_key=True,
+                   autoincrement=True)
+    character_id = db.Column(db.Integer,
+                        db.ForeignKey('characters.id'))
+    item_id = db.Column(db.Integer,
+                        db.ForeignKey('items.id'))

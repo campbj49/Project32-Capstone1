@@ -6,7 +6,7 @@ from forms import *
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "chickenz"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://mxtfbxxk:qrS4yMqEpnmPF0vyS_i-d3QxudEBfCOo@mahmud.db.elephantsql.com/mxtfbxxk'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:@localhost:5432/inventory_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 
@@ -21,6 +21,8 @@ def start():
 @app.route("/register", methods = ['GET', 'POST'])
 def register():
     """Render registration form"""
+
+    if session.get("username"): return redirect(f"/user/{session.get('username')}")
     register_form = RegisterUser()
     if register_form.validate_on_submit():
         if(User.query.get(register_form.username.data)):
@@ -57,15 +59,15 @@ def login():
         
 @app.route("/user/<username>")
 def user(username):
-    """Display user homepage with details and feedback"""
+    """Display user homepage with details and character"""
     if not session.get("username") == username:
         flash("Restricted page access attempted. Login first")
         return redirect("/login")
     return render_template("user.html",
-        title = "Secret",
-        header = f"{username} details",
+        title = "Character List",
+        header = f"{username}'s Characters",
         user = User.query.get(username),
-        feedback = Feedback.query.filter_by(username = username))
+        characters = Character.query.filter_by(username = username))
  
 @app.route("/logout")
 def logout():
@@ -73,55 +75,58 @@ def logout():
     session.pop("username")
     return redirect("/")
     
-@app.route("/users/<username>/feedback/add", methods = ['GET', 'POST'])
-def add_feedback(username):
-    """display and processs feedback page"""
+@app.route("/users/<username>/character/add", methods = ['GET', 'POST'])
+def add_character(username):
+    """display and processs character page"""
     #ensure the user is logged in
     if not session.get("username") == username:
         flash("Restricted page access attempted. Login first")
         return redirect("/login")
-    feedback_form = FeedbackForm()
-    if feedback_form.validate_on_submit():
-        new_post = Feedback(title = feedback_form.title.data,
-                            content = feedback_form.content.data,
+    character_form = CharacterForm()
+    if character_form.validate_on_submit():
+        new_post = Character(name = character_form.name.data,
+                            bio = character_form.bio.data,
+                            str_score = character_form.str_score.data,
                             username = username)
         db.session.add(new_post)
         db.session.commit()
         return redirect(f"/user/{username}")
-    return render_template("feedback.html",
+    return render_template("add-character.html",
         title = "Authentication",
-        header = "Feedback",
-        form = feedback_form)
+        header = "Character",
+        form = character_form)
     
-@app.route("/feedback/<feedback_id>/update", methods = ['GET', 'POST'])
-def update_feedback(feedback_id):
-    feedback = Feedback.query.get_or_404(feedback_id)
+@app.route("/character/<character_id>/update", methods = ['GET', 'POST'])
+def update_character(character_id):
+    character = Character.query.get_or_404(character_id)
     #ensure the user is logged in
-    if not session.get("username") == feedback.username:
+    if not session.get("username") == character.username:
         flash("Restricted page access attempted. Login first")
         return redirect("/login")
         
-    feedback_form = FeedbackForm()
-    if feedback_form.validate_on_submit():
-        feedback.title = feedback_form.title.data
-        feedback.content = feedback_form.content.data
+    character_form = CharacterForm()
+    if character_form.validate_on_submit():
+        character.name = character_form.name.data
+        character.bio = character_form.bio.data
+        character.str_score = character_form.str_score.data
         db.session.commit()
-        return redirect(f"/user/{feedback.username}")
+        return redirect(f"/user/{character.username}")
         
-    feedback_form.title.data = feedback.title
-    feedback_form.content.data = feedback.content
-    return render_template("feedback.html",
+    character_form.name.data = character.name
+    character_form.bio.data = character.bio
+    character_form.str_score.data = character.str_score
+    return render_template("character.html",
         title = "Authentication",
-        header = "Feedback",
-        form = feedback_form)
+        header = "Character",
+        form = character_form)
     
-@app.route("/feedback/<feedback_id>/delete")
-def delete_feedback(feedback_id):
-    feedback = Feedback.query.get_or_404(feedback_id)
+@app.route("/character/<character_id>/delete")
+def delete_character(character_id):
+    character = Character.query.get_or_404(character_id)
     #ensure the user is logged in
-    if not session.get("username") == feedback.username:
+    if not session.get("username") == character.username:
         flash("Restricted page access attempted. Login first")
         return redirect("/login")
-    db.session.delete(feedback)
+    db.session.delete(character)
     db.session.commit() 
-    return redirect(f"/user/{feedback.username}")
+    return redirect(f"/user/{character.username}")

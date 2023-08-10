@@ -23,11 +23,13 @@ class Login(FlaskForm):
     password = PasswordField("Password", 
             validators = [InputRequired()])
     
-class FeedbackForm(FlaskForm):
-    """Submit ne feedback"""
+class CharacterForm(FlaskForm):
+    """Submit new character"""
     
-    title = StringField("Title:",
+    name = StringField("Name:",
             validators = [InputRequired()])
-    content = TextAreaField("Content:",
+    bio = TextAreaField("Bio:",
                 validators = [InputRequired()])
+    str_score = IntegerField("Strength Score:", 
+                             validators=[NumberRange(min=1, max=30)])
     
