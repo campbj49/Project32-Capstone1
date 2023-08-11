@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import *
 from wtforms.validators import *
+
+
 class RegisterUser(FlaskForm):
     """Form for registering a new user."""
 
@@ -31,5 +33,15 @@ class CharacterForm(FlaskForm):
     bio = TextAreaField("Bio:",
                 validators = [InputRequired()])
     str_score = IntegerField("Strength Score:", 
-                             validators=[NumberRange(min=1, max=30)])
+                             validators=[NumberRange(min=1, max=30), InputRequired()])
+    
+class ItemForm(FlaskForm):
+    """Form for adding Itmes"""
+    
+    name = StringField("Name:",
+            validators = [InputRequired()])
+    desc = TextAreaField("Description:",
+                validators = [InputRequired()])
+    weight = IntegerField("Weight (lbs):", 
+                             validators=[InputRequired()])
     

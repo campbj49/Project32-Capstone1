@@ -15,6 +15,7 @@
     <head>
     <title>{{title}}</title>
     {% if 'username' in session %}
+    <li><a href="/item">Items</a></li>
     <li><a href="/logout">Logout</a></li>
     <li><a href="/user/{{session['username']}}">Character List</a></li>
     {%else%}
