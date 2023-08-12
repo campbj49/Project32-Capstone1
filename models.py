@@ -66,6 +66,25 @@ class Character(db.Model):
     
     user = db.relationship("User", backref="character")
 
+    #items = db.relationship("Item", secondary = "characters_items")#, backref = "inventories")
+
+    #alternativlye, to preserve dupliates access the middle table directly
+    items = db.relationship("CharacterItem",backref = "character")
+
+    def encumbrence_calculations(self):
+        return {"encumbered":self.str_score*5,
+                "heavily_encumbered":self.str_score*10,
+                "carrying_capacity":self.str_score*15}
+    
+    def total_weight(self):
+        total = 0
+        for item in self.items: total += item.item.weight
+        return total
+    
+    def add_item(self, added_item):
+        added_connector = CharacterItem(character_id = self.id, item_id = added_item.id)
+        self.items.append(added_connector)
+
 class Item(db.Model):
     """Item model"""
 
@@ -81,10 +100,6 @@ class Item(db.Model):
     #TODO: add some way to attach images, either through public htmls or an API id
 
     weight = db.Column(db.Integer, nullable = False)
-
-    inventories = db.relationship("Character",
-                                  secondary = "characters_items",
-                                  backref = "items")
     
 class CharacterItem(db.Model):
     """Inventory item model"""
@@ -98,3 +113,7 @@ class CharacterItem(db.Model):
                         db.ForeignKey('characters.id'))
     item_id = db.Column(db.Integer,
                         db.ForeignKey('items.id'))
+    
+    modifiers = db.Column(db.String(100), nullable = True)
+    
+    item = db.relationship("Item")

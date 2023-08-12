@@ -136,6 +136,7 @@ def delete_character(character_id):
 ######################## ITEM CREATION AND EDITING ###########################
 @app.route("/item")
 def item_list():
+    """Show all items currently in the system"""
     items = Item.query.all()
     return render_template("item/item.html",
         title = "All Items",
@@ -144,7 +145,7 @@ def item_list():
 
 @app.route("/item/add", methods = ['GET', 'POST'])
 def item_add():
-    """display and item add page"""
+    """display and process item add page"""
     
     item_form = ItemForm()
     if item_form.validate_on_submit():
@@ -161,6 +162,7 @@ def item_add():
     
 @app.route("/item/<item_id>/update", methods = ['GET', 'POST'])
 def update_item(item_id):
+    """Update an item's details"""
     item = Item.query.get_or_404(item_id)
         
     item_form = ItemForm()
@@ -186,3 +188,49 @@ def delete_item(item_id):
     db.session.delete(item)
     db.session.commit() 
     return redirect("/item")
+
+
+######################## INVENTORY MANAGEMENT ###########################
+
+@app.route("/character/<character_id>/inventory")
+def character_inventory(character_id):
+    """Display character's inventory"""
+
+    character = Character.query.get_or_404(character_id)
+    #ensure the user is logged in
+    if not session.get("username") == character.username:
+        flash("Restricted page access attempted. Login first")
+        return redirect("/login")
+    
+    return render_template("inventory.html",
+        title = "Inventory",
+        header = "Inventory",
+        character = character)
+
+@app.route("/character/<character_id>/inventory/add", methods = ['GET', 'POST'])
+def add_to_inventory(character_id):
+    """Add an item to a character's inventory"""
+
+    character = Character.query.get_or_404(character_id)
+    #ensure the user is logged in
+    if not session.get("username") == character.username:
+        flash("Restricted page access attempted. Login first")
+        return redirect("/login")
+    
+    #check to see if there is an item being submitted
+    if request.args.get("added-item"):
+        character.add_item(Item.query.get_or_404(request.args.get("added-item")))
+        db.session.commit()
+        return redirect(f"/character/{character.id}/inventory")
+    
+    return render_template("add-to-inventory.html",
+        title = "Add",
+        header = "Add Item",
+        items = Item.query.all())
+    
+@app.route("/character/<character_id>/<item_id>/remove")
+def remove_item(character_id, item_id):
+    item = CharacterItem.query.get_or_404(item_id)
+    db.session.delete(item)
+    db.session.commit() 
+    return redirect(f"/character/{character_id}/inventory")
