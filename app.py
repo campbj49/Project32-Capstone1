@@ -39,10 +39,11 @@ def register():
         db.session.commit()
         session["username"] = new_user.username
         return redirect(f"/user/{new_user.username}") 
-    return render_template("start.html",
+    return render_template("form.html",
         title = "Authentication",
         header = "Register User",
-        form = register_form)
+        form = register_form,
+        button_label = "Register User")
         
 @app.route("/login", methods = ['GET', 'POST'])
 def login():
@@ -54,10 +55,11 @@ def login():
             return redirect(f"/user/{login_form.username.data}")
         flash("Invalid username or password")
         return redirect("/login")
-    return render_template("login.html",
+    return render_template("form.html",
         title = "Authentication",
         header = "Login",
-        form = login_form)
+        form = login_form,
+        button_label = "Login")
         
 @app.route("/user/<username>")
 def user(username):
@@ -94,10 +96,11 @@ def add_character(username):
         db.session.add(new_post)
         db.session.commit()
         return redirect(f"/user/{username}")
-    return render_template("character/add-character.html",
-        title = "Authentication",
+    return render_template("form.html",
+        title = "Create",
         header = "Character",
-        form = character_form)
+        form = character_form,
+        button_label = "Create Character")
     
 @app.route("/character/<character_id>/update", methods = ['GET', 'POST'])
 def update_character(character_id):
@@ -118,10 +121,11 @@ def update_character(character_id):
     character_form.name.data = character.name
     character_form.bio.data = character.bio
     character_form.str_score.data = character.str_score
-    return render_template("character/character.html",
-        title = "Authentication",
+    return render_template("form.html",
+        title = "Update",
         header = "Character",
-        form = character_form)
+        form = character_form,
+        button_label = "Update Character")
     
 @app.route("/character/<character_id>/delete")
 def delete_character(character_id):
@@ -179,10 +183,11 @@ def update_item(item_id):
     item_form.name.data = item.name
     item_form.desc.data = item.desc
     item_form.weight.data = item.weight
-    return render_template("item/item-update.html",
+    return render_template("form.html",
         title = "Update",
         header = "Item",
-        form = item_form)
+        form = item_form,
+        button_label = "Update Item")
     
 @app.route("/item/<item_id>/delete")
 def delete_item(item_id):
