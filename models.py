@@ -97,7 +97,7 @@ class Item(db.Model):
                    nullable = False)
     desc = db.Column(db.String, nullable= False)
 
-    #TODO: add some way to attach images, either through public htmls or an API id
+    image_url = db.Column(db.String, nullable = True)
 
     weight = db.Column(db.Integer, nullable = False)
     

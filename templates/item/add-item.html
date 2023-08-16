@@ -7,7 +7,7 @@
 
   {% for field in form
          if field.widget.input_type != 'hidden' %}
-
+    {%if field.name != 'image_url'%}
     <p>
       {{ field.label }}
       {{ field }}
@@ -16,8 +16,12 @@
         {{ error }}
       {% endfor %}
     </p>
-
+  {%endif%}
   {% endfor %}
+  <p>
+    <label for="image-select">Select Image:</label>
+    <div id="image-select"></div>
+  </p>
 
   <button type="submit">Add Item</button>
 </form>

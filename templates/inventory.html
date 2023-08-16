@@ -4,15 +4,16 @@
 <p><b>Name:</b> {{character.name}}</p>
 <p><b>Strength Score:</b> {{character.str_score}}</p>
 <p><b>Total Inventory Weight: </b>{{character.total_weight()}} lbs</p>
-<p><b>Encumbered Threshold: </b>{{character.encumbrence_calculations()["encumbered"]}}</p>
-<p><b>Heavily Encumbered Threshold: </b>{{character.encumbrence_calculations()["heavily_encumbered"]}}</p>
-<p><b>Carrying Capacity: </b>{{character.encumbrence_calculations()["carrying_capacity"]}}</p>
+<p><b>Encumbered Threshold: </b>{{character.encumbrence_calculations()["encumbered"]}} lbs</p>
+<p><b>Heavily Encumbered Threshold: </b>{{character.encumbrence_calculations()["heavily_encumbered"]}} lbs</p>
+<p><b>Carrying Capacity: </b>{{character.encumbrence_calculations()["carrying_capacity"]}} lbs</p>
 <h2>Items</h2>
 {%for item in character.items%}
 <div>
     <h3>{{item.item.name}}</h3>
     <p>{{item.item.desc}}</p>
     <p><b>Weight:</b> {{item.item.weight}}</p>
+    <img src="{{item.item.image_url}}">
     <a>Customize?</a>  
     <a href="/character/{{character.id}}/{{item.id}}/remove">Remove from inventory</a>
 </div>

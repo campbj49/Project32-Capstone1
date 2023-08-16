@@ -3,10 +3,12 @@
 {% block content %}
 <form id="add-item">
     {%for item in items%}
-    <input type="radio" name="added-item" value="{{item.id}}">
-        <h3>{{item.name}}</h3>
+    <div class="item">
+        <input type="radio" name="added-item" value="{{item.id}}">
+        <label>{{item.name}}</label>
         <p>{{item.desc}}</p>
         <p><b>Weight:</b> {{item.weight}}</p>
+        <img src="{{item.image_url}}">
     </div>
     {%endfor%}
     <button>Add Item</button>

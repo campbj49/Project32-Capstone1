@@ -9,6 +9,8 @@ app.config['SECRET_KEY'] = "chickenz"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:@localhost:5432/inventory_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
+#image API key:AIzaSyA2Rd8vOelYi-lpm7M0-uTemD69LYlS4ys
+#custom search engine id:b74ccd7463d3745d4
 
 connect_db(app)
 db.create_all()
@@ -151,7 +153,8 @@ def item_add():
     if item_form.validate_on_submit():
         new_item = Item(name = item_form.name.data,
                             desc = item_form.desc.data,
-                            weight = item_form.weight.data)
+                            weight = item_form.weight.data,
+                            image_url = item_form.image_url.data)
         db.session.add(new_item)
         db.session.commit()
         return redirect(f"/item")
