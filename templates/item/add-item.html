@@ -19,10 +19,13 @@
   {%endif%}
   {% endfor %}
   <p>
+    <label for="image-search">Search for Image:</label>
+    <input id="image-search" name="image-search" required="" type="text" value="">
+    <button type="button">Search</button><br>
     <label for="image-select">Select Image:</label>
     <div id="image-select"></div>
   </p>
 
-  <button type="submit">Add Item</button>
+  <button type="submit">Create Item</button>
 </form>
 {% endblock%}
