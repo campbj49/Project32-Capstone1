@@ -1,15 +1,15 @@
 {% extends 'base.html'%}
 
 {% block content %}
+<a href="/item/add" class="solo-button">Create Item</a>
 {%for item in items%}
-<div>
+<div class ="item">
     <h3>{{item.name}}</h3>
     <p>{{item.desc}}</p>
     <p><b>Weight:</b> {{item.weight}}</p>
-    <img src="{{item.image_url}}">
+    <img src="{{item.image_url}}"><br>
     <a href="/item/{{item.id}}/update">Update</a>  
     <a href="/item/{{item.id}}/delete">Delete</a>
 </div>
 {%endfor%}
-<a href="/item/add">Add Item</a>
 {% endblock%}

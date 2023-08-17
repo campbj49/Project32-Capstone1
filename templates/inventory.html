@@ -1,22 +1,41 @@
 {% extends 'base.html'%}
 
 {% block content %}
-<p><b>Name:</b> {{character.name}}</p>
-<p><b>Strength Score:</b> {{character.str_score}}</p>
-<p><b>Total Inventory Weight: </b>{{character.total_weight()}} lbs</p>
-<p><b>Encumbered Threshold: </b>{{character.encumbrence_calculations()["encumbered"]}} lbs</p>
-<p><b>Heavily Encumbered Threshold: </b>{{character.encumbrence_calculations()["heavily_encumbered"]}} lbs</p>
-<p><b>Carrying Capacity: </b>{{character.encumbrence_calculations()["carrying_capacity"]}} lbs</p>
+<table class="character-details">
+    <tr>
+        <td>Name:</td>
+        <td> {{character.name}}</td>
+    </tr>
+    <tr>
+        <td>Strength Score:</td>
+        <td> {{character.str_score}}</td>
+    </tr>
+    <tr>
+        <td>Current Inventory Weight: </td>
+        <td>{{character.total_weight()}} lbs</td>
+    </tr>
+    <tr>
+        <th>Encumbrence Tier</th>
+        <th>Value</th>
+        <th>Weight Remaining</th>
+    </tr>
+    {%for calc in character.encumbrence_calculations()%}
+    <tr>
+        <td title="{{calc['rules']}}">{{calc["title"]}}</td>
+        <td>{{calc["value"]}} lbs</td>
+        <td>{{calc["value"] - character.total_weight()}} lbs</td>
+    </tr>
+    {%endfor%}
+</table>
 <h2>Items</h2>
+<a href="/character/{{character.id}}/inventory/add" class="solo-button">Add Item</a>
 {%for item in character.items%}
-<div>
+<div class="item">
     <h3>{{item.item.name}}</h3>
     <p>{{item.item.desc}}</p>
     <p><b>Weight:</b> {{item.item.weight}}</p>
-    <img src="{{item.item.image_url}}">
-    <a>Customize?</a>  
+    <img src="{{item.item.image_url}}"><br>
     <a href="/character/{{character.id}}/{{item.id}}/remove">Remove from inventory</a>
 </div>
 {%endfor%}
-<a href="/character/{{character.id}}/inventory/add">Add Item</a>
 {% endblock%}

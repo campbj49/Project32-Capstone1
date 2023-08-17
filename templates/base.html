@@ -12,17 +12,19 @@
         {% endif %}
     {% endwith %}
     <!--Tweaked base HTML from lesson-->
-    <head>
+    <head class="main">
     <title>{{title}}</title>
-    {% if 'username' in session %}
-    <li><a href="/item">Items</a></li>
-    <li><a href="/logout">Logout</a></li>
-    <li><a href="/user/{{session['username']}}">Character List</a></li>
-    {%else%}
-    <li><a href="/login">Login</a></li>
-    {% endif %}
     </head>
     <body>
+    <div class="top-bar">
+        {% if 'username' in session %}
+        <li><a href="/item">Items</a></li>
+        <li><a href="/logout">Logout</a></li>
+        <li><a href="/user/{{session['username']}}">Character List</a></li>
+        {%else%}
+        <li><a href="/login">Login</a></li>
+        {% endif %}
+    </div>
     <h1>{{header}}</h1>
     {% block content %} Body Content{% endblock%}
     <script src="https://unpkg.com/jquery"></script>

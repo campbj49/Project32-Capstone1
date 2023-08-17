@@ -19,12 +19,20 @@ $("#image-search").on("focusout", async (e)=>{
             input.type = "radio";
             input.name = "image_url";
             input.value = image_url;
+            input.id = image_url;
             let preview = document.createElement("img");
             preview.src = image_url;
+            let label = document.createElement("label");
+            label.setAttribute("for",image_url);
+            label.appendChild(preview);
             $image_select.append(input);
-            $image_select.append(preview);
-            $image_select.append("<br>");
+            $image_select.append(label);
+            //$image_select.append("<br>");
         }
     }
     console.log("Registration complete")
 })
+
+function clickItem(){
+    document.getElementById("add-item").submit();
+}

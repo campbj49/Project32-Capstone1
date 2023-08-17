@@ -34,6 +34,7 @@ class CharacterForm(FlaskForm):
                 validators = [InputRequired()])
     str_score = IntegerField("Strength Score:", 
                              validators=[NumberRange(min=1, max=30), InputRequired()])
+    image_url = StringField("Image URL: (optional)")
     
 class ItemForm(FlaskForm):
     """Form for adding Items"""

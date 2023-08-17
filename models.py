@@ -63,6 +63,8 @@ class Character(db.Model):
     bio = db.Column(db.String, nullable= False)
 
     str_score = db.Column(db.Integer, nullable = False)
+
+    image_url = db.Column(db.String, nullable = True, default ="https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg" )
     
     user = db.relationship("User", backref="character")
 
@@ -72,9 +74,10 @@ class Character(db.Model):
     items = db.relationship("CharacterItem",backref = "character")
 
     def encumbrence_calculations(self):
-        return {"encumbered":self.str_score*5,
-                "heavily_encumbered":self.str_score*10,
-                "carrying_capacity":self.str_score*15}
+        return [{"title":"Encumbered", "value":self.str_score*5,"rules":"Speed drops by 10ft"},
+                {"title":"Heavily Encumbered","value":self.str_score*10,"rules":"Speed drops by 20ft, disadvantage STR, DEX, or CON checks, saves or attacks"},
+                {"title":"Carrying Capacity", "value":self.str_score*15,"rules":"Speed is 5ft"},
+                {"title":"Movement Cap", "value":self.str_score*30,"rules":"Cannot move weights exceeding this"}]
     
     def total_weight(self):
         total = 0

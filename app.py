@@ -92,6 +92,7 @@ def add_character(username):
         new_post = Character(name = character_form.name.data,
                             bio = character_form.bio.data,
                             str_score = character_form.str_score.data,
+                            image_url = character_form.image_url.data,
                             username = username)
         db.session.add(new_post)
         db.session.commit()
@@ -115,12 +116,14 @@ def update_character(character_id):
         character.name = character_form.name.data
         character.bio = character_form.bio.data
         character.str_score = character_form.str_score.data
+        character.image_url = character_form.image_url.data
         db.session.commit()
         return redirect(f"/user/{character.username}")
         
     character_form.name.data = character.name
     character_form.bio.data = character.bio
     character_form.str_score.data = character.str_score
+    character_form.image_url.data = character.image_url
     return render_template("form.html",
         title = "Update",
         header = "Character",
@@ -143,10 +146,10 @@ def delete_character(character_id):
 @app.route("/item")
 def item_list():
     """Show all items currently in the system"""
-    items = Item.query.all()
+    items = Item.query.order_by("name").all()
     return render_template("item/item.html",
         title = "All Items",
-        header = "Item",
+        header = "Item List",
         items = items)
 
 @app.route("/item/add", methods = ['GET', 'POST'])
@@ -164,7 +167,7 @@ def item_add():
         return redirect(f"/item")
     return render_template("item/add-item.html",
         title = "New Item",
-        header = "Item",
+        header = "Create Item",
         form = item_form)
     
 @app.route("/item/<item_id>/update", methods = ['GET', 'POST'])
@@ -177,15 +180,17 @@ def update_item(item_id):
         item.name = item_form.name.data
         item.desc = item_form.desc.data
         item.weight = item_form.weight.data
+        item.image_url = item_form.image_url.data
         db.session.commit()
         return redirect("/item")
         
     item_form.name.data = item.name
     item_form.desc.data = item.desc
     item_form.weight.data = item.weight
+    item_form.image_url.data = item.image_url
     return render_template("form.html",
         title = "Update",
-        header = "Item",
+        header = "Update Item",
         form = item_form,
         button_label = "Update Item")
     
@@ -234,7 +239,7 @@ def add_to_inventory(character_id):
     return render_template("add-to-inventory.html",
         title = "Add",
         header = "Add Item",
-        items = Item.query.all())
+        items = Item.query.order_by("name").all())
     
 @app.route("/character/<character_id>/<item_id>/remove")
 def remove_item(character_id, item_id):
