@@ -6,7 +6,9 @@ from forms import *
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "chickenz"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:@localhost:5432/inventory_db'
+#URI for local db instance
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:@localhost:5432/inventory_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://mxtfbxxk:qrS4yMqEpnmPF0vyS_i-d3QxudEBfCOo@mahmud.db.elephantsql.com/mxtfbxxk'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 #image API key:AIzaSyA2Rd8vOelYi-lpm7M0-uTemD69LYlS4ys
