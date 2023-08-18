@@ -21,6 +21,9 @@ db.create_all()
 def start():
     """Render landing page"""  
     return redirect("/register")
+
+def invalid_login(username):
+    return session.get("username") != username
 ########################## USER AUTHENTICATION  ##################################
 @app.route("/register", methods = ['GET', 'POST'])
 def register():
@@ -50,6 +53,9 @@ def register():
 @app.route("/login", methods = ['GET', 'POST'])
 def login():
     """Log user in, verifying that it is a valid username/password combo"""
+    #force a user to logout first before accessing the login page
+    if session.get("username"): return redirect(f"/user/{session.get('username')}")
+
     login_form = Login()
     if login_form.validate_on_submit():
         if User.authenticate(login_form.username.data, login_form.password.data):
@@ -66,7 +72,7 @@ def login():
 @app.route("/user/<username>")
 def user(username):
     """Display user homepage with details and character"""
-    if not session.get("username") == username:
+    if invalid_login(username):
         flash("Restricted page access attempted. Login first")
         return redirect("/login")
     return render_template("user.html",
@@ -86,7 +92,7 @@ def logout():
 def add_character(username):
     """display and processs character page"""
     #ensure the user is logged in
-    if not session.get("username") == username:
+    if invalid_login(username):
         flash("Restricted page access attempted. Login first")
         return redirect("/login")
     character_form = CharacterForm()
@@ -109,7 +115,7 @@ def add_character(username):
 def update_character(character_id):
     character = Character.query.get_or_404(character_id)
     #ensure the user is logged in
-    if not session.get("username") == character.username:
+    if invalid_login(character.username):
         flash("Restricted page access attempted. Login first")
         return redirect("/login")
         
@@ -136,7 +142,7 @@ def update_character(character_id):
 def delete_character(character_id):
     character = Character.query.get_or_404(character_id)
     #ensure the user is logged in
-    if not session.get("username") == character.username:
+    if invalid_login(character.username):
         flash("Restricted page access attempted. Login first")
         return redirect("/login")
     db.session.delete(character)
@@ -213,7 +219,7 @@ def character_inventory(character_id):
 
     character = Character.query.get_or_404(character_id)
     #ensure the user is logged in
-    if not session.get("username") == character.username:
+    if invalid_login(character.username):
         flash("Restricted page access attempted. Login first")
         return redirect("/login")
     
@@ -228,7 +234,7 @@ def add_to_inventory(character_id):
 
     character = Character.query.get_or_404(character_id)
     #ensure the user is logged in
-    if not session.get("username") == character.username:
+    if invalid_login(character.username):
         flash("Restricted page access attempted. Login first")
         return redirect("/login")
     
