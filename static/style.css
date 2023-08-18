@@ -59,7 +59,7 @@ form, .character-details {
     width: 50%;
   }
 
-  form label {
+  td label{
     display: inline-block;
     width: 6rem;
     text-align: right;
@@ -75,14 +75,17 @@ form, .character-details {
 
 
   /**** Cleaning up image selector******/
-  .image-select input[type="radio"] {
+  #image-select>input[type="radio"] {
     margin-top: -1px;
     vertical-align: middle;
     display: none;
   }
 
   label > img, label{
+    display: inline-block;
+    padding: 2px;
     cursor: pointer;
+    width: revert;
   }
 
 input:checked + label>img{
