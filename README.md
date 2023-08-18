@@ -1,3 +1,25 @@
+# Finished Capstone README
+- Project Title: Inventory Manager
+- Project URL: https://springboard-campbell-capstone-1.onrender.com/
+- Website allows users to create a list of DnD characters each with an associated inventory of items.
+- Feature list
+    - 
+    - Basic User Authentication
+    - Characters can be created on the user login screen. The character currently supports the following fields:
+        - Name
+        - Bio
+        - Strength score
+        - Image URL
+    - Item fields:
+        - Name
+        - Weight
+        - Image URL - filled out via custom Google search API
+    - Inventory screen:
+        - Calculate different encumberence levels based on current total inventory weigght and strength score.
+        - Items can be attatched to characters and can be seen in the list 
+
+These are the minimum features for managing an inventory in a useful capacity.
+
 # Capstone Project One
 
 We have broken down the Capstone Project into easy-to-follow steps. Each step of the capstone contains a link with instructions for that step. Here’s a quick overview of what you’ll do for each step of your capstone project:
