@@ -19,6 +19,8 @@
         - Items can be attatched to characters and can be seen in the list 
 
 These are the minimum features for managing an inventory in a useful capacity.
+Database:https://api.elephantsql.com/console/daf3fb54-481e-49e9-ab8f-604742e5951c/details
+Render Host:https://dashboard.render.com/web/srv-cj6hfbh7120s73bbtrbg/deploys/dep-cjfeu5ocfp5c73ej4tt0
 
 # Capstone Project One
 

@@ -75,6 +75,7 @@ def user(username):
     if invalid_login(username):
         flash("Restricted page access attempted. Login first")
         return redirect("/login")
+    flash("Current session user is " + session.get("username"))
     return render_template("user.html",
         title = "Character List",
         header = f"{username}'s Characters",
