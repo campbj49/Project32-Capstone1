@@ -2,7 +2,8 @@ from app import app
 from unittest import TestCase
 
 
-class InventoryViewsTestCase(TestCase):
+class LoggedOutViewsTestCase(TestCase):
+    """Bank of tests that don't require user login"""
     #adapting example code from Flask Testing module to current project
     
     #Enable WTforms to be tested
@@ -100,3 +101,45 @@ class InventoryViewsTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn("test&#39;s Characters", html,"Login not working")
+
+
+class LoggedInViewsTestCases(TestCase):
+    """Bank of tests for logged in user"""
+
+    def setUp(self):
+        #enable forms to be tested
+        app.config['WTF_CSRF_ENABLED'] = False
+        #log in to the test user
+        app.test_client().post(
+                '/login', data={
+                    'username':'test',
+                    'password':'test'})
+        
+
+    def test_redirects(self):
+        """Checks that all the unauthorized access routes redirect 
+            back to the home screen with an error"""
+        with app.test_client() as client:
+            userPaths = (["/user/campbj49",
+                          "/users/campbj49/character/add",
+                          "/character/1/update",
+                          "/character/1/delete",
+                          "/character/1/inventory",
+                          "/character/1/inventory/add"])
+            for path in userPaths:
+                resp = client.get(path, follow_redirects=True)
+                html = resp.get_data(as_text=True)
+
+                self.assertEqual(resp.status_code, 200, f"{path} has an issue")
+                self.assertIn('Restricted page access attempted. Login first', html, f"${path} does not throw an error when the wrong user is logged in")
+                self.assertIn("test&#39;s Characters", html,f"${path} 's restricted redirect does not return to homepage.")
+
+
+    def tst_add_character(self):
+        """Checks character creation, modification, and deletion routes"""
+        with app.test_client() as client:
+            resp = client.get('/item')
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('Item List', html)
