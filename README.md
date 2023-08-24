@@ -1,6 +1,7 @@
 # Finished Capstone README
 - Project Title: Inventory Manager
 - Project URL: https://springboard-campbell-capstone-1.onrender.com/
+    - Be warned, the first time accessing the page will take ~60 seconds to load as the backend spins up from standby.
 - Website allows users to create a list of DnD characters each with an associated inventory of items.
 - Feature list
     - 
@@ -22,6 +23,18 @@ These are the minimum features for managing an inventory in a useful capacity.
 Database:https://api.elephantsql.com/console/daf3fb54-481e-49e9-ab8f-604742e5951c/details
 Render Host:https://dashboard.render.com/web/srv-cj6hfbh7120s73bbtrbg/deploys/dep-cjfeu5ocfp5c73ej4tt0
 
+# Local Hosting Instructions
+(These instructions assuming Python v3.11.4 is already installed)
+1. In the root folder of the repo create a venv folder:
+    - `$python venv venv`
+2. Activate the virtual environment
+    - `$source venv/scripts/activate`
+3. Add all the required add ons:
+    - `pip3 install -r requirements.txt`
+4. Start Flask app in debug mode:
+    - `flask run --debug`
+
+Doing all that should get a local instance of the app running at http://127.0.0.1:5000/
 # Capstone Project One
 
 We have broken down the Capstone Project into easy-to-follow steps. Each step of the capstone contains a link with instructions for that step. Here’s a quick overview of what you’ll do for each step of your capstone project:
