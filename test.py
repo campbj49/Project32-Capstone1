@@ -2,7 +2,7 @@ from app import app
 from unittest import TestCase
 
 
-class LoggedOutViewsTestCase(TestCase):
+class LoggedOutViewsTestCases(TestCase):
     """Bank of tests that don't require user login"""
     #adapting example code from Flask Testing module to current project
     
@@ -57,7 +57,7 @@ class LoggedOutViewsTestCase(TestCase):
             self.assertIn('Item List', html)
             
 
-    def test_add_item(self):
+    def test_item_routes(self):
         """Ensures the add/update/delete item pages function"""
         with app.test_client() as client:
             resp = client.post(
@@ -72,19 +72,35 @@ class LoggedOutViewsTestCase(TestCase):
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn('testName', html, "Item updating not functioning")
+            self.assertIn('testName', html, "Item creation not functioning")
+            
             #get created item's id
-            item_id = html[html.find("testUrl")+33:html.find("testUrl")+35]
+            end = start = html.find("testUrl")+33
+            while html[end] != "/": end+=1
+            item_id = html[start:end]
 
             #test update path
+            resp = client.post(
+                f'/item/{item_id}/update', data={
+                    "name" :"testUpdateName",
+                    "desc" : "testUpdateDescription",
+                    "weight" : 3,
+                    "image_url":"testUpdateUrl"
+                },
+                follow_redirects=True
+            )
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('testUpdateName', html, "Item updating not functioning")
+
+            #test delete path to keep server clean of test items
             resp = client.get(
                 f'/item/{item_id}/delete', follow_redirects=True)
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
             self.assertNotIn('testUpdateName', html, "Item deletion not functioning")
-
-            #test delete path
 
 
     def test_login_page(self):
@@ -109,17 +125,17 @@ class LoggedInViewsTestCases(TestCase):
     def setUp(self):
         #enable forms to be tested
         app.config['WTF_CSRF_ENABLED'] = False
-        #log in to the test user
-        app.test_client().post(
-                '/login', data={
-                    'username':'test',
-                    'password':'test'})
         
 
     def test_redirects(self):
         """Checks that all the unauthorized access routes redirect 
             back to the home screen with an error"""
         with app.test_client() as client:
+            #log in
+            client.post(
+                '/login', data={
+                    'username':'test',
+                    'password':'test'})         
             userPaths = (["/user/campbj49",
                           "/users/campbj49/character/add",
                           "/character/1/update",
@@ -135,11 +151,57 @@ class LoggedInViewsTestCases(TestCase):
                 self.assertIn("test&#39;s Characters", html,f"${path} 's restricted redirect does not return to homepage.")
 
 
-    def tst_add_character(self):
+    def test_character_routes(self):
         """Checks character creation, modification, and deletion routes"""
         with app.test_client() as client:
-            resp = client.get('/item')
+            #log in
+            client.post(
+                '/login', data={
+                    'username':'test',
+                    'password':'test'})  
+            #create character
+            resp = client.post(
+                '/users/test/character/add', data={
+                    "name" :"testName",
+                    "bio" : "testBio",
+                    "str_score" : 3,
+                    "image_url":"testUrl",
+                    "username":"test"
+                },
+                follow_redirects=True
+            )
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn('Item List', html)
+            self.assertIn('testName', html, "Character creation not functioning")
+            
+            #get created character's id
+            end = start = html.find("testBio")+40
+            while html[end] != "/": end+=1
+            character_id = html[start:end]
+
+            #test update path
+            resp = client.post(
+                f'/character/{character_id}/update', data={
+                    "name" :"testUpdateName",
+                    "bio" : "testUpdateDescription",
+                    "str_score" : 3,
+                    "image_url":"testUpdateUrl"
+                },
+                follow_redirects=True
+            )
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('testUpdateName', html, "Character updating not functioning")
+
+
+            resp = client.get(
+                f'/character/{character_id}/delete', follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertNotIn('testUpdateName', html, "Character deletion not functioning")
+
+    def test_inventory_routes(self):
+        """Check inventory item addition, modification, and deletion routes"""
