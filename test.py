@@ -46,6 +46,46 @@ class InventoryViewsTestCase(TestCase):
                 self.assertEqual(resp.status_code, 200, f"{path} has an issue")
                 self.assertIn('Restricted page access attempted. Login first', html, f"${path} does not throw an error when no user is logged in")
 
+    def test_item_list(self):
+        """Ensures the item list page is loading"""
+        with app.test_client() as client:
+            resp = client.get('/item')
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('Item List', html)
+            
+
+    def test_add_item(self):
+        """Ensures the add/update/delete item pages function"""
+        with app.test_client() as client:
+            resp = client.post(
+                '/item/add', data={
+                    "name" :"testName",
+                    "desc" : "testDescription",
+                    "weight" : 3,
+                    "image_url":"testUrl"
+                },
+                follow_redirects=True
+            )
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('testName', html, "Item updating not functioning")
+            #get created item's id
+            item_id = html[html.find("testUrl")+33:html.find("testUrl")+35]
+
+            #test update path
+            resp = client.get(
+                f'/item/{item_id}/delete', follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertNotIn('testUpdateName', html, "Item deletion not functioning")
+
+            #test delete path
+
+
     def test_login_page(self):
         """Make sure login in functions correctly"""
         with app.test_client() as client:
