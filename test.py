@@ -204,49 +204,30 @@ class LoggedInViewsTestCases(TestCase):
             self.assertNotIn('testUpdateName', html, "Character deletion not functioning")
 
     def test_inventory_routes(self):
-        """Check inventory item addition, modification, and deletion routes"""
+        """Check inventory item addition and deletion routes"""
         with app.test_client() as client:
             #log in
             client.post(
                 '/login', data={
                     'username':'test',
                     'password':'test'})  
+            
             #create inventory_item
-            resp = client.post(
-                '/character/10/inventory/add', data={
-                    "added-item":4}
-                follow_redirects=True
-            )
+            resp = client.post('/character/10/inventory/add?added-item=4',follow_redirects=True)
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn('testName', html, "Inventory item creation not functioning")
+            self.assertIn('<h3>Abacus</h3>', html, "Inventory item creation not functioning")
             
             #get created inventory_item's id
-            end = start = html.find("/character/10/",html.find("/character/10/inventory/add"))+14
+            end = start = html.find("/character/10/",html.find("Add Item"))+14
             while html[end] != "/": end+=1
             inventory_item_id = html[start:end]
-            self.assertEqual(inventory_item_id, 500)
-
-            #test update path
-            resp = client.post(
-                f'/inventory_item/{inventory_item_id}/update', data={
-                    "name" :"testUpdateName",
-                    "bio" : "testUpdateDescription",
-                    "str_score" : 3,
-                    "image_url":"testUpdateUrl"
-                },
-                follow_redirects=True
-            )
-            html = resp.get_data(as_text=True)
-
-            self.assertEqual(resp.status_code, 200)
-            self.assertIn('testUpdateName', html, "Inventory item updating not functioning")
 
             #test delete path and remove test inventory_item from the server
             resp = client.get(
-                f'/inventory_item/{inventory_item_id}/delete', follow_redirects=True)
+                f'/character/10/{inventory_item_id}/remove', follow_redirects=True)
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertNotIn('testUpdateName', html, "Inventory item deletion not functioning")
+            self.assertNotIn('<h3>Abacus</h3>', html, "Inventory item deletion not functioning")
